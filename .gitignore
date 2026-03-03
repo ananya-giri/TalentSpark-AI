@@ -1,0 +1,12 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+data/
+db/*.sqlite
+db/*.db
+models_list.txt
+models_out.txt
+.vscode/
+.idea/
