@@ -1,15 +1,20 @@
 import os
+import time
 from crewai import Crew, Process, Task
 from agents.recruitment_agents import RecruitmentAgents
-import time
+
+# Import the scoring utility
+from utils.hiring_scoring import extract_fit_score, build_ranking_report
+
 
 def run_recruitment_flow(resume_text, job_description, video_path=None):
     """
     STABLE MULTI-AGENT FLOW:
     Uses 4 specialized agents defined by the user.
     """
+
     agents = RecruitmentAgents()
-    
+
     # Initialize agents
     manager = agents.talent_acquisition_manager()
     sourcer = agents.sourcing_agent()
@@ -22,32 +27,32 @@ def run_recruitment_flow(resume_text, job_description, video_path=None):
         from tools.video_processor import analyze_video
         video_summary = f"\n[VIDEO INSIGHTS]: {analyze_video(video_path, 'Summarize the candidate tone and confidence.')}"
 
-    # 1. Sourcing Task
+    # 1️⃣ Sourcing Task
     sourcing_task = Task(
         description=f"Research and cite 3 alternate candidate profiles or market benchmarks similar to this role: {job_description}",
         expected_output="A list of 3 candidate profiles/links and skill rarity analysis.",
         agent=sourcer
     )
 
-    # 2. Screening Task
+    # 2️⃣ Screening Task
     screening_task = Task(
         description=f"Analyze this resume: {resume_text} against the JD: {job_description}. {video_summary}",
         expected_output="Anonymized resume snippets, technical fit score (0-100), and skill gap analysis.",
         agent=screener
     )
 
-    # 3. Engagement & Scheduling Task
+    # 3️⃣ Engagement & Scheduling Task
     engagement_task = Task(
         description="""Draft a personalized outreach email based on the screening results. 
-        Also, propose an interview roadmap including 3 architectural questions and potential time slots.""",
+Also, propose an interview roadmap including 3 architectural questions and potential time slots.""",
         expected_output="A personalized email and a structured interview plan with logic questions.",
         agent=coordinator
     )
 
-    # 4. Management & Synthesis Task
+    # 4️⃣ Management & Synthesis Task
     management_task = Task(
         description="""Review the output from the Sourcing, Screening, and Engagement tasks. 
-        Synthesize everything into a final 'Strategic Recruitment Dossier' for the HR Director.""",
+Synthesize everything into a final 'Strategic Recruitment Dossier' for the HR Director.""",
         expected_output="A comprehensive final report containing Sourcing, Screening, Engagement, and Interview plans.",
         agent=manager,
         context=[sourcing_task, screening_task, engagement_task]
@@ -61,24 +66,38 @@ def run_recruitment_flow(resume_text, job_description, video_path=None):
         verbose=True
     )
 
-    # Execute
-    return recruitment_crew.kickoff()
+    # Execute CrewAI workflow
+    result = recruitment_crew.kickoff()
+
+    # Extract technical fit score from the report
+    score = extract_fit_score(str(result))
+
+    # Generate hiring recommendation
+    ranking_section = build_ranking_report(score)
+
+    # Return final combined report
+    return f"{result}\n{ranking_section}"
+
 
 def save_to_vault(resume_text, metadata):
     from tools.rag_processor import vault
     return vault.add_resume(resume_text, metadata)
 
+
 def search_vault(query):
     from tools.rag_processor import vault
     return vault.search_similar_resumes(query)
+
 
 def get_all_vault_resumes():
     from tools.rag_processor import vault
     return vault.get_all_resumes()
 
+
 def clear_vault():
     from tools.rag_processor import vault
     return vault.clear_vault()
+
 
 if __name__ == "__main__":
     pass
