@@ -24,7 +24,7 @@ TalentSpark AI uses a sequential workflow orchestrated by CrewAI:
 ## 🛠️ Technology Stack
 
 - **Framework**: CrewAI
-- **LLM**: Google Gemini (1.5 Pro, 1.5 Flash)
+- **LLM**: Google Gemini (2.5 Pro, 2.5 Flash)
 - **Database**: ChromaDB (Vector DB)
 - **UI**: Streamlit
 - **Tools**: DuckDuckGo Search, Gemini Video API
@@ -57,8 +57,6 @@ TalentSpark AI uses a sequential workflow orchestrated by CrewAI:
 
 ---
 
-## 📊 High-Level Flow
 
-![Architecture](ARCHITECTURE.md)
 
 *For a detailed breakdown of the system design, check out [ARCHITECTURE.md](ARCHITECTURE.md).*
