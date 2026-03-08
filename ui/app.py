@@ -151,6 +151,7 @@ st.markdown("""
         margin-bottom: 1.5rem;
         width: 100%;
         display: block;
+        
     }
 
     /* Remove specific streamlit alignment constraints */
@@ -161,6 +162,37 @@ st.markdown("""
     [data-testid="stHorizontalBlock"] {
         gap: 2rem !important;
     }
+    /* Force white text for specific elements in light mode */
+.stTextArea label, .stFileUploader label {
+    color: white !important;
+    font-weight: 500 !important;
+    opacity: 1 !important;
+}
+
+/* Target the specific labels you mentioned */
+[data-testid="stTextArea"] label p {
+    color: white !important;
+}
+
+/* For "Upload Professional Resume" and "Upload Intro Video" labels */
+[data-testid="stFileUploader"] label span {
+    color: white !important;
+}
+
+/* For the file uploader text */
+[data-testid="stFileUploader"] [data-testid="stMarkdownContainer"] p {
+    color: white !important;
+}
+
+/* For the "Drag and drop file here" text */
+[data-testid="stFileUploader"] small {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* For the file name after upload */
+[data-testid="stFileUploader"] [data-testid="stMarkdownContainer"] {
+    color: white !important;
+}
     </style>
 """, unsafe_allow_html=True)
 
@@ -170,7 +202,7 @@ st.markdown('<p class="subtitle">Next-Gen Agentic Recruitment & Market Intellige
 
 # --- Sidebar ---
 with st.sidebar:
-    st.image("https://img.icons8.com/clouds/500/shuttle.png", width=150)
+    
     st.title("Control Center")
     
     app_mode = st.radio("Navigation", ["🚀 New Analysis", "🗄️ Resume Vault", "💬 HR Assistant"])
