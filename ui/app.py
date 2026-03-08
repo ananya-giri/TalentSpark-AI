@@ -287,7 +287,7 @@ if app_mode == "🚀 New Analysis":
             st.markdown("## 📊 Strategic Recruitment Dossier")
             
             st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-            st.markdown(st.session_state.last_result.raw)
+            st.markdown(st.session_state.last_result)
             st.markdown('</div>', unsafe_allow_html=True)
             
             st.success("All recruitment modules (Screening, Sourcing, Engagement, and Interview Prep) have been unified into the report above.")
@@ -297,7 +297,7 @@ if app_mode == "🚀 New Analysis":
             with icol1:
                 st.download_button(
                     label="📥 Download Intelligence Dossier",
-                    data=str(st.session_state.last_result.raw),
+                    data=str(st.session_state.last_result),
                     file_name=f"recruitment_intelligence_{int(time.time())}.md",
                     mime="text/markdown"
                 )
@@ -375,7 +375,7 @@ elif app_mode == "💬 HR Assistant":
                     # Provide context from the last analysis
                     context = ""
                     if st.session_state.last_result:
-                        context = f"Here is the latest recruitment report context:\n{st.session_state.last_result.raw}"
+                        context = f"Here is the latest recruitment report context:\n{st.session_state.last_result}"
                     
                     full_prompt = f"""
                     You are the 'Talent Acquisition Manager'. 
@@ -405,3 +405,6 @@ st.markdown("""
         Built for Ethical & Data-Driven Hiring
     </div>
 """, unsafe_allow_html=True)
+
+
+
